@@ -13,11 +13,11 @@ function Login() {
     const emailFromUrl = params.get('email'); // Fetch email from URL
 
     if (emailFromUrl) {
-      console.log('Email found in URL:', emailFromUrl);  // Debug log to ensure email is found
+      console.log('IPAMS Subscription Found');  // Debug log to ensure email is found
       setEmail(emailFromUrl);  // Set email in state
       handleLogin(emailFromUrl); // Call the login function with email only
     } else {
-      console.log('No email found in URL');
+      console.log('No Subscription Found');
     }
   }, []);
 
@@ -34,11 +34,11 @@ function Login() {
         localStorage.setItem('authToken', authToken); // Store the token in localStorage
         navigate(response.data.is_superuser ? '/admin' : '/home'); // Redirect based on user role
       } else {
-        alert('Email is incorrect or not recognized');
+        alert('Account is incorrect or not recognized');
       }
     } catch (error) {
       console.error('Login failed:', error);
-      alert("Email is incorrect or not recognized");
+      alert("Account is incorrect or not recognized");
     } finally {
       setLoginLoading(false);
     }

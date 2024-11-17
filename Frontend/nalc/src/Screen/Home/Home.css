@@ -55,3 +55,78 @@
   width: 1100px;
   alignItems: center;
 }
+
+/* Styling for Custom Alert */
+body {
+  font-family: Arial, sans-serif;
+}
+
+/* Modal Styles */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1000; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+}
+
+.modal-content {
+  background-color: white;
+  margin: 15% auto;
+  padding: 20px;
+  border: 2px solid maroon;
+  width: 80%; /* Adjust width for smaller screens */
+  max-width: 400px; /* Set a maximum width for the modal */
+  text-align: center;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  position: relative;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 90%; /* Wider for smaller screens */
+  }
+}
+
+/* Close Button */
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  color: maroon;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Button Styles */
+#alert-ok-btn {
+  background-color: maroon;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+#alert-ok-btn:hover {
+  background-color: gold;
+  color: maroon;
+}
+
+/* Heading and Text */
+h2 {
+  color: maroon;
+}
+
+p {
+  color: #333;
+}

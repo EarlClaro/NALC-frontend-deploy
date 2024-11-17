@@ -306,49 +306,88 @@ const fetchChatsAndData = async () => {
 
   const handleSendMessage = async () => {
     if (input.trim() === '') {
-      // Display error or handle accordingly
-    } else {
-      setmsgloading(true);
-
-      try {
-        let currentThreadId;
-
-        if (!chatCreated) {
-          currentThreadId = await handleCreateChat("New Chat");
-        } else {
-          currentThreadId = threadId;
-        }
-
-        if (currentThreadId !== 0) {
-          await axios.post('api/messages/create/', {
-            thread_id: currentThreadId,
-            query: input,
-          });
-          await fetchDataAndMsg(currentThreadId);
-          setInput('');
-        }
-      } catch (error) {
-        if (error.response) {
-          const { status, data } = error.response;
-          if (status === 404) {
-            alert("Thread not found. Creating a new thread.");
-            await handleCreateChat("New Chat");
-          } else if (status === 500) {
-            alert("Server error. Please try again later.");
-          } else {
-            alert("An unexpected error occurred. Please try again.");
-          }
-        } else {
-          alert("An unexpected error occurred. Please try again.");
-        }
-      } finally {
-        setmsgloading(false);
+      // Optional: Handle empty input if needed
+      return;
+    }
+  
+    setmsgloading(true);
+  
+    try {
+      let currentThreadId;
+  
+      if (!chatCreated) {
+        currentThreadId = await handleCreateChat("New Chat");
+      } else {
+        currentThreadId = threadId;
       }
+  
+      if (currentThreadId !== 0) {
+        const response = await axios.post('api/messages/create/', {
+          thread_id: currentThreadId,
+          query: input,
+        });
+  
+        await fetchDataAndMsg(currentThreadId);
+        setInput(''); // Clear the input after sending the message
+      }
+    } catch (error) {
+      if (error.response) {
+        const { status, data } = error.response;
+        if (status === 429) {
+          // Show modal for daily message limit
+          setErrorModal({
+            show: true,
+            title: "Message Limit Reached",
+            message: data.error || "You have reached the daily message limit. Please try again in 24 hours.",
+          });
+        } else if (status === 404) {
+          setErrorModal({
+            show: true,
+            title: "Thread Not Found",
+            message: "Thread not found. Creating a new thread.",
+          });
+          await handleCreateChat("New Chat");
+        } else if (status === 500) {
+          setErrorModal({
+            show: true,
+            title: "Server Error",
+            message: "An unexpected server error occurred. Please try again later.",
+          });
+        } else {
+          setErrorModal({
+            show: true,
+            title: "Unexpected Error",
+            message: "An unexpected error occurred. Please try again.",
+          });
+        }
+      } else {
+        setErrorModal({
+          show: true,
+          title: "Unexpected Error",
+          message: "An unexpected error occurred. Please try again.",
+        });
+      }
+    } finally {
+      setmsgloading(false);
+    
     }
   };
+  
     
   return (
     <div className="container-fluid gx-0">
+      {/* Custom Modal */}
+      {errorModal.show && (
+        <div className="modal" style={{ display: 'block' }}>
+          <div className="modal-content">
+            <span className="close-button" onClick={closeModal}>&times;</span>
+            <h2>{errorModal.title}</h2>
+            <p>{errorModal.message}</p>
+            <button id="alert-ok-btn" onClick={closeModal}>OK</button>
+          </div>
+        </div>
+      )}
+
       {/* Modal */}
       <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-sm">
